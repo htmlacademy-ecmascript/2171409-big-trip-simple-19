@@ -1,7 +1,7 @@
 # Проект «Большое путешествие (простой)»
 
 * Студент: [Roman Trukhan](https://up.htmlacademy.ru/ecmascript/19/user/2171409).
-* Наставник: `Неизвестно`.
+* Наставник: [Дарья Сюткина](https://github.com/syutkinadasha).
 
 ---
 
