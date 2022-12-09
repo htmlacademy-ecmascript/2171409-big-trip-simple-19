@@ -1,7 +1,9 @@
 import { createElement } from '../render.js';
 
 function createContentItem() {
-  return ('<li class="trip-events__item"></li>');
+  return (`
+  <li class="trip-events__item"></li>
+  `);
 }
 
 export default class ContentItemView {
