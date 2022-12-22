@@ -6,9 +6,13 @@ import { render } from '../render.js';
 
 export default class ContentPresenter {
   contentComponent = new ContentListView();
-  constructor({ contentContainer, pointsModel }) {
-    this.contentContainer = contentContainer;
+  constructor(siteHeaderElement, pointsModel, boardPoints, boardTypes, boardOffers, boardDestinations) {
+    this.siteHeaderElement = siteHeaderElement;
     this.pointsModel = pointsModel;
+    this.boardPoints = boardPoints;
+    this.boardTypes = boardTypes;
+    this.boardOffers = boardOffers;
+    this.boardDestinations = boardDestinations;
   }
 
   init() {
@@ -17,8 +21,7 @@ export default class ContentPresenter {
     this.boardOffers = [...this.pointsModel.getOffers()];
     this.boardDestinations = [...this.pointsModel.getDestinations()];
 
-
-    render(this.contentComponent, this.contentContainer);
+    render(this.contentComponent, this.siteHeaderElement);
     render(new NewPointView(), this.contentComponent.getElement());
     render(new EditPointView({ point: this.boardPoints[0], type: this.boardTypes, offer: this.boardOffers, destination: this.boardDestinations }), this.contentComponent.getElement());
     for (let i = 1; i < this.boardPoints.length; i++) {

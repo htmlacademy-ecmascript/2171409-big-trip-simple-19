@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { AMOUNT_ITEMS } from './const.js';
 
 const DATE_FORMAT = 'MMM D';
 const TIME_FORMAT = 'HH-mm';
@@ -26,4 +27,8 @@ function getUppercase(data) {
   return data.charAt(0).toUpperCase() + data.slice(1);
 }
 
-export { getRandomArrayElement, getDate, isTimeStart, isTimeEnd, getRandomInt, getUppercase };
+function getRandomPoints(data) {
+  return Array.from({ length: AMOUNT_ITEMS }, data);
+}
+
+export { getRandomArrayElement, getDate, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints };

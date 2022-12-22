@@ -11,7 +11,7 @@ const pointsModel = new PointsModel();
 
 const siteMainElement = document.querySelector('.page-main');
 const siteHeaderElement = siteMainElement.querySelector('.trip-events');
-const boardPresenter = new ContentPresenter({ contentContainer: siteHeaderElement, pointsModel });
+const boardPresenter = new ContentPresenter(siteHeaderElement, pointsModel);
 
 render(new FilterView(), siteHeaderTripElement);
 render(new SortView(), siteHeaderElement);
