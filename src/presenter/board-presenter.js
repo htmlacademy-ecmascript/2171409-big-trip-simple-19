@@ -1,4 +1,3 @@
-import AMOUNTITEMS from '../constants.js';
 import ContentListView from '../view/content-list.js';
 import NewPointView from '../view/point-new.js';
 import EditPointView from '../view/point-edit.js';
@@ -7,17 +6,26 @@ import { render } from '../render.js';
 
 export default class ContentPresenter {
   contentComponent = new ContentListView();
-
-  constructor({ contentContainer }) {
-    this.contentContainer = contentContainer;
+  constructor(siteHeaderElement, pointsModel, boardPoints, boardTypes, boardOffers, boardDestinations) {
+    this.siteHeaderElement = siteHeaderElement;
+    this.pointsModel = pointsModel;
+    this.boardPoints = boardPoints;
+    this.boardTypes = boardTypes;
+    this.boardOffers = boardOffers;
+    this.boardDestinations = boardDestinations;
   }
 
   init() {
-    render(this.contentComponent, this.contentContainer);
+    this.boardPoints = [...this.pointsModel.getPoints()];
+    this.boardTypes = [...this.pointsModel.getTypes()];
+    this.boardOffers = [...this.pointsModel.getOffers()];
+    this.boardDestinations = [...this.pointsModel.getDestinations()];
+
+    render(this.contentComponent, this.siteHeaderElement);
     render(new NewPointView(), this.contentComponent.getElement());
-    render(new EditPointView(), this.contentComponent.getElement());
-    for (let i = 0; i < AMOUNTITEMS; i++) {
-      render(new PointView(), this.contentComponent.getElement());
+    render(new EditPointView({ point: this.boardPoints[0], type: this.boardTypes, offer: this.boardOffers, destination: this.boardDestinations }), this.contentComponent.getElement());
+    for (let i = 1; i < this.boardPoints.length; i++) {
+      render(new PointView({ point: this.boardPoints[i] }), this.contentComponent.getElement());
     }
   }
 }
