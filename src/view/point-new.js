@@ -170,7 +170,6 @@ function createNewPointTemplate() {
 export default class NewPointView {
 
   #element = null;
-  
   get template() {
     return createNewPointTemplate();
   }

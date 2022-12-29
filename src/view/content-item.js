@@ -7,9 +7,8 @@ function createContentItem() {
 }
 
 export default class ContentItemView {
-
   #element = null;
-  
+
   get template() {
     return createContentItem();
   }

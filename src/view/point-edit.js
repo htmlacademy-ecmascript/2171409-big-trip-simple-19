@@ -1,8 +1,14 @@
 import { createElement } from '../render.js';
-// import { getUppercase } from '../utils.js';
+import { isTimeStart, getUppercase, getDateFull } from '../utils.js';
 
-function editPointTemplate() {
 
+function editPointTemplate(point) {
+
+  const { dateFrom, dateTo, type, basePrice, destination } = point;
+  const dayFrom = getDateFull(dateFrom);
+  const typeEvent = getUppercase(type.title);
+  const timeStart = isTimeStart(dateFrom);
+  const timeEnd = isTimeStart(dateTo);
 
   return (`
               <li class="trip-events__item">
@@ -11,7 +17,7 @@ function editPointTemplate() {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type.title}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -69,9 +75,9 @@ function editPointTemplate() {
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      Flight
+                      ${typeEvent}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.title}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       <option value="Amsterdam"></option>
                       <option value="Geneva"></option>
@@ -81,10 +87,10 @@ function editPointTemplate() {
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dayFrom} ${timeStart}">
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dayFrom} ${timeEnd}">
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -92,7 +98,7 @@ function editPointTemplate() {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -155,7 +161,7 @@ function editPointTemplate() {
 
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
+                    <p class="event__destination-description">${destination.destination}</p>
                   </section>
                 </section>
               </form>
@@ -179,7 +185,7 @@ export default class EditPointView {
   }
 
   get template() {
-    return editPointTemplate();
+    return editPointTemplate(this.#point);
   }
 
   get element() {

@@ -12,7 +12,7 @@ function pointTemplate(point) {
   return (
     `<li class="trip-events__item">
     <div class="event">
-    <time class="event__date" datetime="${dayFrom}">${dateFrom}</time>
+    <time class="event__date" datetime="${dayFrom}">${dayFrom}</time>
     <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.title}.png" alt="Event type icon">
     </div>
@@ -48,7 +48,6 @@ export default class PointView {
 
   #element = null;
   #point = null;
-  
   constructor({ point }) {
     this.#point = point;
   }
