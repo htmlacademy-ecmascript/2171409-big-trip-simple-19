@@ -3,6 +3,7 @@ import { AMOUNT_ITEMS } from './const.js';
 
 const DATE_FORMAT = 'MMM D';
 const TIME_FORMAT = 'HH-mm';
+const DATE_FORMAT_FULL = 'DD/MM/YY';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -10,6 +11,10 @@ function getRandomArrayElement(items) {
 
 function getRandomInt() {
   return Math.floor(Math.random() * 9999);
+}
+
+function getDateFull(dateFormat) {
+  return dateFormat ? dayjs(dateFormat).format(DATE_FORMAT_FULL) : '';
 }
 
 function getDate(dateFrom) {
@@ -31,4 +36,4 @@ function getRandomPoints(data) {
   return Array.from({ length: AMOUNT_ITEMS }, data);
 }
 
-export { getRandomArrayElement, getDate, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints };
+export { getRandomArrayElement, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints };

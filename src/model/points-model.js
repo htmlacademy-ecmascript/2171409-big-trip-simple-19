@@ -2,26 +2,32 @@ import { getRandomPoint, typesList, destinationsList, offersList } from '../mock
 import { getRandomPoints } from '../utils.js';
 
 export default class PointsModel {
-  constructor(points = getRandomPoints(getRandomPoint), types = [...typesList], destinations = [...destinationsList], offers = [...offersList]) {
-    this.points = points;
-    this.types = types;
-    this.destinations = destinations;
-    this.offers = offers;
+
+  #points = [];
+  #types = [];
+  #destinations = [];
+  #offers = [];
+
+  constructor(points, types, destinations, offers) {
+    this.#points = points || getRandomPoints(getRandomPoint);
+    this.#types = types || [...typesList];
+    this.#destinations = destinations || [...destinationsList];
+    this.#offers = offers || [...offersList];
   }
 
-  getPoints() {
-    return this.points;
+  get points() {
+    return this.#points;
   }
 
-  getTypes() {
-    return this.types;
+  get types() {
+    return this.#types;
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 }

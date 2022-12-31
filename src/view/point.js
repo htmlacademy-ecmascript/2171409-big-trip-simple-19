@@ -12,7 +12,7 @@ function pointTemplate(point) {
   return (
     `<li class="trip-events__item">
     <div class="event">
-    <time class="event__date" datetime="${dayFrom}">${dateFrom}</time>
+    <time class="event__date" datetime="${dayFrom}">${dayFrom}</time>
     <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.title}.png" alt="Event type icon">
     </div>
@@ -46,22 +46,24 @@ function pointTemplate(point) {
 
 export default class PointView {
 
+  #element = null;
+  #point = null;
   constructor({ point }) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return pointTemplate(this.point);
+  get template() {
+    return pointTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
