@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createFirstPointTemplate() {
   return (`
@@ -17,21 +17,9 @@ function createFirstPointTemplate() {
           `);
 }
 
-export default class FirstPointView {
+export default class FirstPointView extends AbstractView {
 
-  #element = null;
   get template() {
     return createFirstPointTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
