@@ -2,25 +2,39 @@ import ContentListView from '../view/content-list.js';
 import EditPointView from '../view/point-edit.js';
 import PointView from '../view/point.js';
 import { render } from '../render.js';
+import FilterView from '../view/filter.js';
+import SortView from '../view/sort.js';
+import FirstPointView from '../view/list-empty.js';
 
 export default class ContentPresenter {
-  #siteHeaderElement = null;
+
+  #siteEventElement = null;
+  #siteBodyElement = null;
   #pointsModel = null;
   #contentComponent = new ContentListView();
   #boardPoints = [];
 
-  constructor(siteHeaderElement, pointsModel, boardPoints) {
-    this.#siteHeaderElement = siteHeaderElement;
+  constructor(siteEventElement, pointsModel, boardPoints, siteBodyElement) {
+    this.#siteEventElement = siteEventElement;
+    this.#siteBodyElement = siteBodyElement;
     this.#pointsModel = pointsModel;
     this.#boardPoints = boardPoints;
   }
 
   init() {
+    render(new FilterView(), this.#siteBodyElement);
+
+
     this.#boardPoints = [...this.#pointsModel.points];
 
-    render(this.#contentComponent, this.#siteHeaderElement);
-    for (let i = 1; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
+    if (this.#boardPoints.every((point) => point.id)) {
+      render(new SortView(), this.#siteEventElement);
+      render(this.#contentComponent, this.#siteEventElement);
+      for (let i = 1; i < this.#boardPoints.length; i++) {
+        this.#renderPoint(this.#boardPoints[i]);
+      }
+    } else {
+      render(new FirstPointView(), this.#siteEventElement);
     }
   }
 
@@ -44,7 +58,7 @@ export default class ContentPresenter {
       }
     };
 
-    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click',(evt)=>{
+    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
       evt.preventDefault();
       replaceCardToForm();
       document.removeEventListener('keydown', escKeyDownHandler);

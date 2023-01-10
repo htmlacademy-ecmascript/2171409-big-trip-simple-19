@@ -20,7 +20,6 @@ function createFirstPointTemplate() {
 export default class FirstPointView {
 
   #element = null;
-  
   get template() {
     return createFirstPointTemplate();
   }
