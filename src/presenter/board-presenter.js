@@ -1,4 +1,4 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import ContentListView from '../view/content-list.js';
 import EditPointView from '../view/point-edit.js';
 import PointView from '../view/point.js';
@@ -69,11 +69,11 @@ export default class ContentPresenter {
     });
 
     function replaceFormToCard() {
-      this.#contentComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
+      replace(pointEditComponent, pointComponent);
     }
 
     function replaceCardToForm() {
-      this.#contentComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
+      replace(pointComponent, pointEditComponent);
     }
 
     render(pointComponent, this.#contentComponent.element);
