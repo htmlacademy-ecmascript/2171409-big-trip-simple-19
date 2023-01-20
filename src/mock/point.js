@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { getRandomArrayElement, getRandomInt } from '../utils.js';
 
 const destinationsList = [
@@ -105,7 +106,6 @@ const pointsList = [
     dateFrom: '2019-03-18T10:30',
     dateTo: '2019-03-18T11:00',
     destination: getRandomArrayElement(destinationsList),
-    id: '1',
     offers: [getRandomArrayElement(offersList), getRandomArrayElement(offersList)],
     type: getRandomArrayElement(typesList),
   }, {
@@ -113,7 +113,6 @@ const pointsList = [
     dateFrom: '2019-03-18T12:25',
     dateTo: '2019-03-18T13:35',
     destination: getRandomArrayElement(destinationsList),
-    id: '2',
     offers: [getRandomArrayElement(offersList), getRandomArrayElement(offersList)],
     type: getRandomArrayElement(typesList),
   }, {
@@ -121,7 +120,6 @@ const pointsList = [
     dateFrom: '2019-03-18T12:25',
     dateTo: '2019-03-18T13:35',
     destination: getRandomArrayElement(destinationsList),
-    id: '3',
     offers: [getRandomArrayElement(offersList), getRandomArrayElement(offersList)],
     type: getRandomArrayElement(typesList),
   }, {
@@ -129,7 +127,6 @@ const pointsList = [
     dateFrom: '2019-03-19T10:00',
     dateTo: '2019-03-19T11:00',
     destination: getRandomArrayElement(destinationsList),
-    id: '4',
     offers: [getRandomArrayElement(offersList), getRandomArrayElement(offersList)],
     type: getRandomArrayElement(typesList),
   }, {
@@ -137,14 +134,16 @@ const pointsList = [
     dateFrom: '2019-03-19T18:00',
     dateTo: '2019-03-19T19:00',
     destination: getRandomArrayElement(destinationsList),
-    id: '5',
     offers: [getRandomArrayElement(offersList), getRandomArrayElement(offersList)],
     type: getRandomArrayElement(typesList),
   },
 ];
 
 function getRandomPoint() {
-  return getRandomArrayElement(pointsList);
+  return {
+    id: nanoid(),
+    ...getRandomArrayElement(pointsList)
+  };
 }
 
 export { getRandomPoint, typesList, destinationsList, offersList };
