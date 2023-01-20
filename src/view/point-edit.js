@@ -1,33 +1,14 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { TYPE } from '../const.js';
 import { isTimeStart, getUppercase, getDateFull } from '../utils.js';
 
-const BLANK_TASK = {
-  basePrice: null,
-  dateFrom: null,
-  dateTo: null,
-  destination: '',
-  offers: [],
-  type: TYPE[0],
-};
-
-function createPointEditTypeTemplate(currentType) {
-  return TYPE.map((type) => `
-                              <div class="event__type-item">
-                                <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''}>
-                                <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${getUppercase(type)}</label>
-                              </div>
-                            `).join('');
-}
 
 function editPointTemplate(point) {
 
   const { dateFrom, dateTo, type, basePrice, destination } = point;
   const dayFrom = getDateFull(dateFrom);
-  const timeStart = isTimeStart(dateFrom);
   const typeEvent = getUppercase(type.title);
+  const timeStart = isTimeStart(dateFrom);
   const timeEnd = isTimeStart(dateTo);
-  const typesTemplate = createPointEditTypeTemplate(type);
 
   return (`
               <li class="trip-events__item">
@@ -36,7 +17,7 @@ function editPointTemplate(point) {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${typeEvent}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type.title}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -44,8 +25,50 @@ function editPointTemplate(point) {
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
 
-                          ${typesTemplate}
+                        <div class="event__type-item">
+                          <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
+                          <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
+                        </div>
 
+                        <div class="event__type-item">
+                          <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
+                          <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
+                          <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
+                          <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
+                          <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
+                          <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
+                          <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
+                          <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
+                        </div>
+
+                        <div class="event__type-item">
+                          <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
+                          <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
+                        </div>
                       </fieldset>
                     </div>
                   </div>
@@ -75,7 +98,7 @@ function editPointTemplate(point) {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value='${basePrice}'>
+                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -150,21 +173,21 @@ export default class EditPointView extends AbstractView {
 
   #point = null;
   #handleFormSubmit = null;
-  #handleCloseForm = null;
+  #handleEditClick = null;
   #type = null;
   #destination = null;
   #offer = null;
 
-  constructor({ point = BLANK_TASK, type, destination, offer, onFormSubmit, onCloseForm }) {
+  constructor({ point, type, destination, offer, onFormSubmit, onEditClick }) {
     super();
     this.#point = point;
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleCloseForm = onCloseForm;
+    this.#handleEditClick = onEditClick;
     this.#type = type;
     this.#destination = destination;
     this.#offer = offer;
 
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickEditHandler);
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
@@ -172,13 +195,13 @@ export default class EditPointView extends AbstractView {
     return editPointTemplate(this.#point);
   }
 
-  #formCloseHandler = (evt) => {
+  #clickEditHandler = (evt) => {
     evt.preventDefault();
-    this.#handleCloseForm();
+    this.#handleEditClick();
   };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit();
   };
 }
