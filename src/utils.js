@@ -36,8 +36,4 @@ function getRandomPoints(data) {
   return Array.from({ length: AMOUNT_ITEMS }, data);
 }
 
-function updateItem(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
-
-export { getRandomArrayElement, updateItem, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints };
+export { getRandomArrayElement, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints };
