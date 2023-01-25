@@ -31,9 +31,9 @@ function pointTemplate(point) {
     <ul class="event__selected-offers">        
     ${offers.map((data) => `
         <li class="event__offer">
-              <span class="event__offer-title">${data.title}</span>
+              <span class="event__offer-title">${data[2].title}</span>
               &plus;&euro;&nbsp;
-              <span class="event__offer-price">${data.price}</span>
+              <span class="event__offer-price">${data[2].price}</span>
           </li>
     `).join('')}
     </ul>

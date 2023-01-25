@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPE } from '../const.js';
 import { isTimeStart, getUppercase, getDateFull } from '../utils.js';
 
@@ -20,14 +20,35 @@ function createPointEditTypeTemplate(currentType) {
                             `).join('');
 }
 
+function createOffersTemplate(currentOffers) {
+  return currentOffers.map((offer) => `
+                                  <div class="event__offer-selector">
+                                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.word}-1" type="checkbox" name="event-offer-${offer.word}" ${offer.active ? 'checked' : ''}>
+                                    <label class="event__offer-label" for="event-offer-${offer.word}-1">
+                                      <span class="event__offer-title">${offer.title}</span>
+                                      &plus;&euro;&nbsp;
+                                      <span class="event__offer-price">${offer.price}</span>
+                                    </label>
+                                  </div>`).join('');
+}
+
+function createPicturesTemplate(currentPictures) {
+  return currentPictures.map((pictures) => `
+    <img class="event__photo" src="${pictures.src}.jpg" alt="${pictures.description}">
+  `);
+}
+
 function editPointTemplate(point) {
 
-  const { dateFrom, dateTo, type, basePrice, destination } = point;
+  const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+
   const dayFrom = getDateFull(dateFrom);
   const timeStart = isTimeStart(dateFrom);
-  const typeEvent = getUppercase(type.title);
-  const timeEnd = isTimeStart(dateTo);
   const typesTemplate = createPointEditTypeTemplate(type);
+  const typeEvent = getUppercase(type.title || typesTemplate);
+  const timeEnd = isTimeStart(dateTo);
+  const offersTemplate = createOffersTemplate(offers.flat());
+  const picturesTemplate = createPicturesTemplate(destination.pictures.flat());
 
   return (`
               <li class="trip-events__item">
@@ -36,16 +57,14 @@ function editPointTemplate(point) {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${typeEvent}.png" alt="Event type icon">
-                    </label>
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type.title}.png" alt = "Event type icon" >
+                    </label >
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-
-                          ${typesTemplate}
-
+                          ${typesTemplate}                        
                       </fieldset>
                     </div>
                   </div>
@@ -86,91 +105,85 @@ function editPointTemplate(point) {
                 </header>
                 <section class="event__details">
                   <section class="event__section  event__section--offers">
-                    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
+                    <h3 class="event__section-title  event__section-title--offers">Offers</h3>                    
                     <div class="event__available-offers">
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                        <label class="event__offer-label" for="event-offer-luggage-1">
-                          <span class="event__offer-title">Add luggage</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">50</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                        <label class="event__offer-label" for="event-offer-comfort-1">
-                          <span class="event__offer-title">Switch to comfort</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">80</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                        <label class="event__offer-label" for="event-offer-meal-1">
-                          <span class="event__offer-title">Add meal</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">15</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                        <label class="event__offer-label" for="event-offer-seats-1">
-                          <span class="event__offer-title">Choose seats</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">5</span>
-                        </label>
-                      </div>
-
-                      <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                        <label class="event__offer-label" for="event-offer-train-1">
-                          <span class="event__offer-title">Travel by train</span>
-                          &plus;&euro;&nbsp;
-                          <span class="event__offer-price">40</span>
-                        </label>
-                      </div>
+                      ${offersTemplate}
                     </div>
                   </section>
-
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${destination.destination}</p>
+                    <div class="event__photos-container">
+                      <div class="event__photos-tape">
+                        ${picturesTemplate}
+                      </div>
+                    </div>
                   </section>
                 </section>
               </form>
-            </li>
+            </li >
   `);
 }
 
-export default class EditPointView extends AbstractView {
+export default class EditPointView extends AbstractStatefulView {
 
   #point = null;
   #handleFormSubmit = null;
   #handleCloseForm = null;
+  #handleDeleteClick = null;
   #type = null;
   #destination = null;
   #offer = null;
 
-  constructor({ point = BLANK_TASK, type, destination, offer, onFormSubmit, onCloseForm }) {
+  constructor({ point = BLANK_TASK, type, destination, offer, onFormSubmit, onCloseForm, onDeleteClick, onSelectOffer }) {
     super();
-    this.#point = point;
+    this._setState(EditPointView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
     this.#handleCloseForm = onCloseForm;
+    this.#handleDeleteClick = onDeleteClick;
+    this.#offerInputHandler = onSelectOffer;
     this.#type = type;
     this.#destination = destination;
     this.#offer = offer;
 
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
+    this._restoreHandlers();
+  }
+
+  reset(point) {
+    this.updateElement(
+      EditPointView.parsePointToState(point),
+    );
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formCloseHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+    // this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
+    this.element.querySelector('.event__offer-checkbox').addEventListener('change', this.#offerInputHandler);
   }
 
   get template() {
-    return editPointTemplate(this.#point);
+    return editPointTemplate(this._state);
   }
+
+  removeElement() {
+    super.removeElement();
+  }
+
+  #offerInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      offers: { ...this._state.offers, [evt.target.value]: evt.target.checked },
+    });
+  };
+
+  #priceInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value,
+    });
+  };
 
   #formCloseHandler = (evt) => {
     evt.preventDefault();
@@ -179,6 +192,24 @@ export default class EditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(EditPointView.parseStateToPoint(this._state));
   };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditPointView.parseStateToPoint(this._state));
+  };
+
+  static parsePointToState(point) {
+    return {
+      ...point,
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = { ...state };
+
+    return point;
+  }
+
 }

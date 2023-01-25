@@ -47,10 +47,7 @@ export default class ContentPresenter {
     if (this.#boardPoints.every((point) => point.id)) {
       this.#renderSort();
       render(this.#pointListComponent, this.#siteEventElement);
-      for (let i = 0; i < this.#boardPoints.length; i++) {
-        this.#renderPoint(this.#boardPoints[i]);
-        // console.log(this.#boardPoints[i])
-      }
+      this.#boardPoints.forEach((value) => this.#renderPoint(value));
     } else {
       this.#renderFirstPoint();
     }
