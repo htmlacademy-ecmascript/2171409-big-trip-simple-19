@@ -158,6 +158,45 @@ const offersList = [
   }
 ];
 
+const offersByTypeList = [
+  {
+    type: 'taxi',
+    offers: [0, 1, 2, 3]
+  },
+  {
+    type: 'bus',
+    offers: [0, 1, 2]
+  },
+  {
+    type: 'train',
+    offers: [2, 3]
+  },
+  {
+    type: 'ship',
+    offers: [3, 4]
+  },
+  {
+    type: 'drive',
+    offers: [1, 4]
+  },
+  {
+    type: 'flight',
+    offers: [2, 4]
+  },
+  {
+    type: 'check-in',
+    offers: [0, 4]
+  },
+  {
+    type: 'sightseeing',
+    offers: [0, 1, 3]
+  },
+  {
+    type: 'restaurant',
+    offers: [0, 1, 2, 3, 4]
+  },
+];
+
 const pointsList = [
   {
     basePrice: 20,
@@ -204,4 +243,4 @@ function getRandomPoint() {
   };
 }
 
-export { getRandomPoint, typesList, destinationsList, offersList };
+export { getRandomPoint, typesList, destinationsList, offersList, offersByTypeList };
