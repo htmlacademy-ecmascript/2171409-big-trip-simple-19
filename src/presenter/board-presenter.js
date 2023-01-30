@@ -1,9 +1,9 @@
 import { render, RenderPosition } from '../framework/render.js';
-import ContentListView from '../view/content-list.js';
+import ContentListView from '../view/content-list-view.js';
 import PointPresenter from './point-presenter.js';
-import FilterView from '../view/filter.js';
-import SortView from '../view/sort.js';
-import FirstPointView from '../view/list-empty.js';
+import FilterView from '../view/filter-view.js';
+import SortView from '../view/sort-view.js';
+import FirstPointView from '../view/list-empty-view.js';
 import { updateItem } from '../utils.js';
 
 export default class ContentPresenter {

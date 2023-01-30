@@ -47,12 +47,12 @@ const createOffersTemplate = (offers) => {
 };
 
 function createPicturesTemplate(currentPictures) {
-  return currentPictures.map((pictures) => `
-    <img class="event__photo" src="${pictures.src}.jpg" alt="${pictures.description}">
-  `);
+  return currentPictures.map(({ src, description }) => `
+        <img class="event__photo" src="${src}.jpg" alt="${description}">
+  `).join('');
 }
 
-function editPointTemplate(point) {
+function editPointTemplate(point = BLANK_TASK, showBtn) {
 
   const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
   const dayFrom = getDateFull(dateFrom);
@@ -104,6 +104,7 @@ function editPointTemplate(point) {
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                   <button class="event__reset-btn" type="reset">Delete</button>
+                  ${showBtn ? '<button class="event__rollup-btn" type="button">' : ''}
                   <button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
                   </button>
@@ -113,11 +114,11 @@ function editPointTemplate(point) {
                 <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${destination.destination}</p>
-                    <div class="event__photos-container">
-                      <div class="event__photos-tape">
-                        ${picturesTemplate}
-                      </div>
-                    </div>
+                        <div class="event__photos-container">
+                          <div class="event__photos-tape">
+                            ${picturesTemplate}
+                          </div>
+                        </div>                        
                   </section>
                 </section>
               </form>
@@ -135,8 +136,9 @@ export default class EditPointView extends AbstractStatefulView {
   #type = null;
   #destination = null;
   #offer = null;
+  #showBtn = null;
 
-  constructor({ point = BLANK_TASK, type, destination, offer, onFormSubmit, onCloseForm, onDeleteClick }) {
+  constructor({ point = BLANK_TASK, type, destination, offer, onFormSubmit, onCloseForm, onDeleteClick }, showBtn) {
     super();
     this._setState(EditPointView.parsePointToState(point));
     this.#handleFormSubmit = onFormSubmit;
@@ -145,6 +147,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#type = type;
     this.#destination = destination;
     this.#offer = offer;
+    this.#showBtn = showBtn;
 
     this._restoreHandlers();
   }
@@ -165,7 +168,7 @@ export default class EditPointView extends AbstractStatefulView {
   }
 
   get template() {
-    return editPointTemplate(this._state);
+    return editPointTemplate(this._state, this.#showBtn);
   }
 
   removeElement() {
@@ -197,6 +200,7 @@ export default class EditPointView extends AbstractStatefulView {
   #formCloseHandler = (evt) => {
     evt.preventDefault();
     this.#handleCloseForm();
+
   };
 
   #formSubmitHandler = (evt) => {
