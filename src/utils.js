@@ -45,4 +45,8 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { getRandomArrayElement, updateItem, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints, findOffers };
+// Функция сопоставления выбранного пункта назначения
+const getCheckedDestination = (point, destinations) => destinations.find((destination) => point.destination === destination.id);
+
+
+export { getRandomArrayElement, updateItem, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints, findOffers, getCheckedDestination };

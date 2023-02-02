@@ -28,6 +28,7 @@ export default class ContentPresenter {
   init() {
     this.#renderFilter();
     this.#boardPoints = [...this.#pointsModel.points];
+    // console.log(this.#boardPoints)
     this.#renderBoard();
   }
 

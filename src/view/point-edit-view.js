@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPE } from '../const.js';
 import { isTimeStart, getDateFull, findOffers } from '../utils.js';
-import { offersByTypeList, offersList } from '../mock/point.js';
+import { offersByTypeList, offersList, destinationsList } from '../mock/point.js';
 
 const BLANK_TASK = {
   basePrice: null,
@@ -25,6 +25,12 @@ const createEventListTemplate = (type) => (
 </div>`
 );
 
+function createDestinationsListTemplate(options) {
+  return options?.map((option) => `<option value="${option.title}"></option>`).join('');
+};
+
+
+
 const createOffersTemplate = (offers) => {
   if (offers !== null) {
     return (
@@ -47,20 +53,40 @@ const createOffersTemplate = (offers) => {
 };
 
 function createPicturesTemplate(currentPictures) {
-  return currentPictures.map(({ src, description }) => `
+  return currentPictures?.map(({ src, description }) => `
         <img class="event__photo" src="${src}.jpg" alt="${description}">
   `).join('');
-}
+};
+
+const createDestinationTemplate = (destination) => {
+  const { title, pictures } = destination;
+  return `
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <p class="event__destination-description">${title}</p>
+        <div class="event__photos-container">
+          <div class="event__photos-tape">
+            ${createPicturesTemplate(pictures)}
+          </div>
+        </div>
+      </section>`;
+};
 
 function editPointTemplate(point = BLANK_TASK, showBtn) {
 
   const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+
+  const getCurrentDestination = (destinations, id) => destinations.find((destination) => destination.id === id);
+  const destinationTemplate = getCurrentDestination(destinationsList, destination.id) ? createDestinationTemplate(destination) : '';
+
   const dayFrom = getDateFull(dateFrom);
   const timeStart = isTimeStart(dateFrom);
   const timeEnd = isTimeStart(dateTo);
   const offersTemplate = createOffersTemplate(offers.flat());
-  const picturesTemplate = createPicturesTemplate(destination.pictures.flat());
   const eventListTemplate = createEventListTemplate(type);
+  const destinationCurrentName = getCurrentDestination(destinationsList, destination.id);
+  const destinationsListTemplate = createDestinationsListTemplate(destinationsList);
+  console.log(destinationCurrentName.title);
 
   return (`
               <li class="trip-events__item">
@@ -78,11 +104,9 @@ function editPointTemplate(point = BLANK_TASK, showBtn) {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${type.title || type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.title}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-${destination.id}" type="text" name="event-destination" list="destination-list-1" value="${destinationCurrentName.title}">
                     <datalist id="destination-list-1">
-                      <option value="Amsterdam"></option>
-                      <option value="Geneva"></option>
-                      <option value="Chamonix"></option>
+                      ${destinationsListTemplate}
                     </datalist>
                   </div>
 
@@ -111,15 +135,7 @@ function editPointTemplate(point = BLANK_TASK, showBtn) {
                 </header>
                 <section class="event__details">
                       ${offersTemplate}
-                <section class="event__section  event__section--destination">
-                    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">${destination.destination}</p>
-                        <div class="event__photos-container">
-                          <div class="event__photos-tape">
-                            ${picturesTemplate}
-                          </div>
-                        </div>                        
-                  </section>
+                  ${destinationTemplate}
                 </section>
               </form>
             </li >
@@ -164,6 +180,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
     // this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
     // this.element.querySelector('.event__offer-checkbox').addEventListener('change', this.#offerInputHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationInputHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeChangeHandler);
   }
 
@@ -183,6 +200,13 @@ export default class EditPointView extends AbstractStatefulView {
     });
   };
 
+  #destinationInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: evt.target.value,
+    });
+  };
+
   // #offerInputHandler = (evt) => {
   //   evt.preventDefault();
   //   this.updateElement({
@@ -196,6 +220,7 @@ export default class EditPointView extends AbstractStatefulView {
       basePrice: evt.target.value,
     });
   };
+
 
   #formCloseHandler = (evt) => {
     evt.preventDefault();

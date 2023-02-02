@@ -236,6 +236,10 @@ const pointsList = [
   },
 ];
 
+const findDestination = (city) => destinationsList.find((destination) => destination.title === city);
+
+// const allDest = () => destinationsList.map((city)=> city.title)
+
 function getRandomPoint() {
   return {
     id: nanoid(),
@@ -243,4 +247,4 @@ function getRandomPoint() {
   };
 }
 
-export { getRandomPoint, typesList, destinationsList, offersList, offersByTypeList };
+export { getRandomPoint, typesList, destinationsList, offersList, offersByTypeList, findDestination };
