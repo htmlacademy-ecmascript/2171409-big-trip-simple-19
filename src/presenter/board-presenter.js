@@ -1,9 +1,9 @@
 import { render, RenderPosition } from '../framework/render.js';
-import ContentListView from '../view/content-list.js';
+import ContentListView from '../view/content-list-view.js';
 import PointPresenter from './point-presenter.js';
-import FilterView from '../view/filter.js';
-import SortView from '../view/sort.js';
-import FirstPointView from '../view/list-empty.js';
+import FilterView from '../view/filter-view.js';
+import SortView from '../view/sort-view.js';
+import FirstPointView from '../view/list-empty-view.js';
 import { updateItem } from '../utils.js';
 
 export default class ContentPresenter {
@@ -28,6 +28,7 @@ export default class ContentPresenter {
   init() {
     this.#renderFilter();
     this.#boardPoints = [...this.#pointsModel.points];
+    // console.log(this.#boardPoints)
     this.#renderBoard();
   }
 
@@ -47,10 +48,7 @@ export default class ContentPresenter {
     if (this.#boardPoints.every((point) => point.id)) {
       this.#renderSort();
       render(this.#pointListComponent, this.#siteEventElement);
-      for (let i = 0; i < this.#boardPoints.length; i++) {
-        this.#renderPoint(this.#boardPoints[i]);
-        // console.log(this.#boardPoints[i])
-      }
+      this.#boardPoints.forEach((value) => this.#renderPoint(value));
     } else {
       this.#renderFirstPoint();
     }

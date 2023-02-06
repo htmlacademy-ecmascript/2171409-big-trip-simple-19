@@ -36,8 +36,17 @@ function getRandomPoints(data) {
   return Array.from({ length: AMOUNT_ITEMS }, data);
 }
 
+function findOffers(offersByType, typeOfPoint, offersList) {
+  const foundOffersType = offersByType.find((item) => item.type === typeOfPoint);
+  return foundOffersType ? offersList.filter((offer) => foundOffersType.offers.includes(offer.id)) : null;
+}
+
 function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { getRandomArrayElement, updateItem, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints };
+// Функция сопоставления выбранного пункта назначения
+const getCheckedDestination = (point, destinations) => destinations.find((destination) => point.destination === destination.id);
+
+
+export { getRandomArrayElement, updateItem, getDate, getDateFull, isTimeStart, isTimeEnd, getRandomInt, getUppercase, getRandomPoints, findOffers, getCheckedDestination };

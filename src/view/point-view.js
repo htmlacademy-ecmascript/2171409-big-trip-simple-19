@@ -1,13 +1,14 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getDate, isTimeStart, getUppercase } from '../utils.js';
-
+import { getDate, isTimeStart, getUppercase, findOffers } from '../utils.js';
+import { offersByTypeList, offersList } from '../mock/point.js';
 
 function pointTemplate(point) {
-  const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+  const { dateFrom, dateTo, type, basePrice, destination } = point;
   const dayFrom = getDate(dateFrom);
   const typeEvent = getUppercase(type.title);
   const timeStart = isTimeStart(dateFrom);
   const timeEnd = isTimeStart(dateTo);
+  const findOffersByType = findOffers(offersByTypeList, type.title, offersList);
 
   return (
     `<li class="trip-events__item">
@@ -28,14 +29,16 @@ function pointTemplate(point) {
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
-    <ul class="event__selected-offers">        
-    ${offers.map((data) => `
+    <ul class="event__selected-offers">
+
+    ${findOffersByType.map((data) => `
         <li class="event__offer">
               <span class="event__offer-title">${data.title}</span>
               &plus;&euro;&nbsp;
               <span class="event__offer-price">${data.price}</span>
           </li>
     `).join('')}
+    
     </ul>
     <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>

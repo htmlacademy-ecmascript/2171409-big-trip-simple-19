@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
-import EditPointView from '../view/point-edit.js';
-import PointView from '../view/point.js';
+import EditPointView from '../view/point-edit-view.js';
+import PointView from '../view/point-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -60,6 +60,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   }
@@ -85,12 +86,12 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToCard();
     }
   };
 
   #handleEditClick = () => {
-    this.#handleDataChange({ ...this.#point });
     this.#replaceCardToForm();
   };
 
@@ -100,6 +101,7 @@ export default class PointPresenter {
   };
 
   #handleCloseForm = () => {
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToCard();
   };
 }
