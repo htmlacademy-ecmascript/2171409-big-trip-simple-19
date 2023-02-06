@@ -86,7 +86,7 @@ function editPointTemplate(point = BLANK_TASK, showBtn) {
   const eventListTemplate = createEventListTemplate(type);
   const destinationCurrentName = getCurrentDestination(destinationsList, destination.id);
   const destinationsListTemplate = createDestinationsListTemplate(destinationsList);
-  console.log(destinationCurrentName.title);
+  // console.log(destinationCurrentName.title);
 
   return (`
               <li class="trip-events__item">
@@ -104,7 +104,7 @@ function editPointTemplate(point = BLANK_TASK, showBtn) {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${type.title || type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-${destination.id}" type="text" name="event-destination" list="destination-list-1" value="${destinationCurrentName.title}">
+                    <input class="event__input  event__input--destination" id="event-destination-${destination.id}" type="text" name="event-destination" list="destination-list-1" value="${destination.title}">
                     <datalist id="destination-list-1">
                       ${destinationsListTemplate}
                     </datalist>
@@ -194,6 +194,7 @@ export default class EditPointView extends AbstractStatefulView {
 
   #eventTypeChangeHandler = (evt) => {
     evt.preventDefault();
+
     this.updateElement({
       type: evt.target.value,
       offers: findOffers(offersByTypeList, evt.target.value, offersList)
@@ -202,8 +203,9 @@ export default class EditPointView extends AbstractStatefulView {
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
+    const selectedDestination = destinationsList.find((destination) => evt.target.value === destination.title);
     this.updateElement({
-      destination: evt.target.value,
+      destination: selectedDestination,
     });
   };
 
