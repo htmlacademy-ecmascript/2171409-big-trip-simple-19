@@ -27,9 +27,7 @@ const createEventListTemplate = (type) => (
 
 function createDestinationsListTemplate(options) {
   return options?.map((option) => `<option value="${option.title}"></option>`).join('');
-};
-
-
+}
 
 const createOffersTemplate = (offers) => {
   if (offers !== null) {
@@ -56,7 +54,7 @@ function createPicturesTemplate(currentPictures) {
   return currentPictures?.map(({ src, description }) => `
         <img class="event__photo" src="${src}.jpg" alt="${description}">
   `).join('');
-};
+}
 
 const createDestinationTemplate = (destination) => {
   const { title, pictures } = destination;
@@ -74,9 +72,9 @@ const createDestinationTemplate = (destination) => {
 
 function editPointTemplate(point = BLANK_TASK, showBtn) {
 
-  const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+  const { dateFrom, dateTo, type, basePrice, offers, destination } = point;
 
-  const getCurrentDestination = (destinations, id) => destinations.find((destination) => destination.id === id);
+  const getCurrentDestination = (destinations, id) => destinations.find((dest) => dest.id === id);
   const destinationTemplate = getCurrentDestination(destinationsList, destination.id) ? createDestinationTemplate(destination) : '';
 
   const dayFrom = getDateFull(dateFrom);
@@ -84,7 +82,7 @@ function editPointTemplate(point = BLANK_TASK, showBtn) {
   const timeEnd = isTimeStart(dateTo);
   const offersTemplate = createOffersTemplate(offers.flat());
   const eventListTemplate = createEventListTemplate(type);
-  const destinationCurrentName = getCurrentDestination(destinationsList, destination.id);
+  // const destinationCurrentName = getCurrentDestination(destinationsList, destination.id);
   const destinationsListTemplate = createDestinationsListTemplate(destinationsList);
   // console.log(destinationCurrentName.title);
 

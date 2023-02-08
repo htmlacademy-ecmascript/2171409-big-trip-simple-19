@@ -4,7 +4,7 @@ import PointPresenter from './point-presenter.js';
 import FilterView from '../view/filter-view.js';
 import SortView from '../view/sort-view.js';
 import FirstPointView from '../view/list-empty-view.js';
-import { updateItem } from '../utils.js';
+import { UpdateType, UserAction } from '../const.js';
 
 export default class ContentPresenter {
 
@@ -15,20 +15,21 @@ export default class ContentPresenter {
   #noPointView = new FirstPointView();
   #sortView = new SortView();
   #filterView = new FilterView();
-  #boardPoints = [];
   #pointPresenter = new Map();
 
-  constructor(siteEventElement, pointsModel, boardPoints, siteBodyElement) {
+  constructor(siteEventElement, pointsModel, siteHeaderTripElement, siteBodyElement) {
     this.#siteEventElement = siteEventElement;
     this.#siteBodyElement = siteBodyElement;
     this.#pointsModel = pointsModel;
-    this.#boardPoints = boardPoints;
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+  }
+
+  get points() {
+    return this.#pointsModel.points;
   }
 
   init() {
     this.#renderFilter();
-    this.#boardPoints = [...this.#pointsModel.points];
-    // console.log(this.#boardPoints)
     this.#renderBoard();
   }
 
@@ -45,33 +46,64 @@ export default class ContentPresenter {
   }
 
   #renderBoard() {
-    if (this.#boardPoints.every((point) => point.id)) {
+    const pointCount = this.points.length;
+    const points = this.points;
+
+    if (points.every((point) => point.id)) {
       this.#renderSort();
       render(this.#pointListComponent, this.#siteEventElement);
-      this.#boardPoints.forEach((value) => this.#renderPoint(value));
+      for (let i = 0; i < pointCount; i++) {
+        this.#renderPoint(points[i]);
+      }
     } else {
       this.#renderFirstPoint();
     }
   }
 
-  #clearPointList() {
-    this.#pointPresenter.forEach((presenter) => presenter.destroy());
-    this.#pointPresenter.clear();
-  }
+  // #clearPointList() {
+  //   this.#pointPresenter.forEach((presenter) => presenter.destroy());
+  //   this.#pointPresenter.clear();
+  // }
 
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint) => {
-    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    // console.log(actionType, updateType, update);
+    switch (actionType) {
+      case UserAction.UPDATE_TASK:
+        this.#pointsModel.updateTask(updateType, update);
+        break;
+      case UserAction.ADD_TASK:
+        this.#pointsModel.addTask(updateType, update);
+        break;
+      case UserAction.DELETE_TASK:
+        this.#pointsModel.deleteTask(updateType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    // console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#pointPresenter.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#pointListComponent.element,
-      onDataChange: this.#handlePointChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
 
